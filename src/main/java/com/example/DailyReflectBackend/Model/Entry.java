@@ -11,6 +11,7 @@ import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @Entity
@@ -26,8 +27,11 @@ public class Entry {
     @NotEmpty
     private String content;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime savedTime;
+    @Temporal(TemporalType.DATE)
+    private Date savedDay;
+
+    @Temporal(TemporalType.TIME)
+    private Date savedTime;
 
     @NotNull
     @ManyToOne
