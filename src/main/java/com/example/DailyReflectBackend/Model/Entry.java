@@ -1,5 +1,6 @@
 package com.example.DailyReflectBackend.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -34,7 +35,7 @@ public class Entry {
     private Date savedTime;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "moodId", referencedColumnName = "id")
     private Mood mood;
 }

@@ -1,7 +1,6 @@
 package com.example.DailyReflectBackend.Controller;
 
-import com.example.DailyReflectBackend.Model.Mood;
-import com.example.DailyReflectBackend.Repository.MoodRepository;
+import com.example.DailyReflectBackend.DTO.MoodDTO;
 import com.example.DailyReflectBackend.Service.MoodService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,14 @@ public class MoodController {
     }
 
     @PostMapping(path = "/insert")
-    public ResponseEntity<Mood> insertMood(@RequestBody @Valid Mood mood) {
-        Mood m = moodService.addMood(mood);
+    public ResponseEntity<MoodDTO> insertMood(@RequestBody @Valid MoodDTO mood) {
+        MoodDTO m = moodService.addMood(mood);
         return ResponseEntity.status(HttpStatus.OK).body(m);
     }
 
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<Mood> updateMood(@RequestBody @Valid Mood mood, @PathVariable("id") int moodId) {
-        Mood m = moodService.updateMood(mood, moodId);
+    public ResponseEntity<MoodDTO> updateMood(@RequestBody @Valid MoodDTO mood, @PathVariable("id") int moodId) {
+        MoodDTO m = moodService.updateMood(mood, moodId);
         return ResponseEntity.status(HttpStatus.OK).body(m);
     }
 
@@ -40,14 +39,20 @@ public class MoodController {
     }
 
     @GetMapping(path = "/getMood")
-    public ResponseEntity<Mood> getMood(@RequestParam("id") int moodId) {
-        Mood m = moodService.getMoodById(moodId);
+    public ResponseEntity<MoodDTO> getMood(@RequestParam("id") int moodId) {
+        MoodDTO m = moodService.getMoodById(moodId);
         return ResponseEntity.status(HttpStatus.OK).body(m);
     }
 
     @GetMapping(path = "/getAllMood")
-    public ResponseEntity<List<Mood>> getAllMood() {
-        List<Mood> moodList = moodService.getAllMood();
+    public ResponseEntity<List<MoodDTO>> getAllMood() {
+        List<MoodDTO> moodList = moodService.getAllMood();
         return ResponseEntity.status(HttpStatus.OK).body(moodList);
+    }
+
+    @GetMapping(path = "/getMood")
+    public ResponseEntity<MoodDTO> getMoodByMoodString(@RequestParam("mood") String mood) {
+        MoodDTO m = moodService.getMoodByMoodString(mood);
+        return ResponseEntity.status(HttpStatus.OK).body(m);
     }
 }

@@ -1,9 +1,11 @@
 package com.example.DailyReflectBackend.Service;
 
+import com.example.DailyReflectBackend.DTO.MoodDTO;
 import com.example.DailyReflectBackend.Exceptions.MoodAlreadyExistsException;
 import com.example.DailyReflectBackend.Exceptions.NoSuchMoodException;
 import com.example.DailyReflectBackend.Model.Mood;
 import com.example.DailyReflectBackend.Repository.MoodRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +15,29 @@ import java.util.Optional;
 @Service
 public class MoodService {
     private MoodRepository moodRepository;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     @Autowired
     public void setMoodRepository(MoodRepository moodRepository) {
         this.moodRepository = moodRepository;
     }
 
-    public Mood getMoodById(int moodId) {
+    public MoodDTO getMoodById(int moodId) {
+        Optional<Mood> moodOptional = moodRepository.findById(moodId);
+
+        if(moodOptional.isEmpty()) {
+            throw new NoSuchMoodException("No mood with id " + moodId + " exists");
+        }
+
+        return this.modelMapper.map(moodOptional.get(), MoodDTO.class);
+    }
+
+    public Mood getMoodObjectById(int moodId) {
         Optional<Mood> moodOptional = moodRepository.findById(moodId);
 
         if(moodOptional.isEmpty()) {
@@ -29,18 +47,31 @@ public class MoodService {
         return moodOptional.get();
     }
 
-    public Mood addMood(Mood mood) {
-        Optional<Mood> moodOptional = moodRepository.findByMood(mood.getMood());
+    public MoodDTO getMoodByMoodString(String mood) {
+        Optional<Mood> moodOptional = moodRepository.findByMood(mood);
+
+        if(moodOptional.isEmpty()) {
+            throw new NoSuchMoodException("No such mood: " + mood + " exists");
+        }
+
+        return this.modelMapper.map(moodOptional.get(), MoodDTO.class);
+    }
+
+    public MoodDTO addMood(MoodDTO mood) {
+        Mood m = this.modelMapper.map(mood, Mood.class);
+        Optional<Mood> moodOptional = moodRepository.findByMood(m.getMood());
 
         if(moodOptional.isPresent()) {
             throw new MoodAlreadyExistsException("Mood " + mood.getMood() + " already exists");
         }
 
-        return moodRepository.save(mood);
+        Mood moodAfterSave = moodRepository.save(m);
+        return this.modelMapper.map(moodAfterSave, MoodDTO.class);
     }
 
-    public List<Mood> getAllMood() {
-        return moodRepository.findAll();
+    public List<MoodDTO> getAllMood() {
+        List<Mood> moodList = moodRepository.findAll();
+        return moodList.stream().map(m -> this.modelMapper.map(m, MoodDTO.class)).toList();
     }
 
     public void deleteMood(int moodId) {
@@ -53,7 +84,8 @@ public class MoodService {
         moodRepository.deleteById(moodId);
     }
 
-    public Mood updateMood(Mood mood, int moodId) {
+    public MoodDTO updateMood(MoodDTO mood, int moodId) {
+        Mood m = this.modelMapper.map(mood, Mood.class);
         Optional<Mood> moodOptional = moodRepository.findById(moodId);
         if(moodOptional.isEmpty()) {
             throw new NoSuchMoodException("No mood with id " + moodId + " exists");
@@ -61,6 +93,8 @@ public class MoodService {
 
         mood.setId(moodId);
 
-        return moodRepository.save(mood);
+        Mood moodAfterSave = moodRepository.save(m);
+
+        return this.modelMapper.map(moodAfterSave, MoodDTO.class);
     }
 }

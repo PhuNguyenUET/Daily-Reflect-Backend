@@ -1,6 +1,6 @@
 package com.example.DailyReflectBackend.Controller;
 
-import com.example.DailyReflectBackend.Model.Entry;
+import com.example.DailyReflectBackend.DTO.EntryDTO;
 import com.example.DailyReflectBackend.Service.EntryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +23,14 @@ public class EntryController {
     }
 
     @PostMapping(path = "/insert")
-    public ResponseEntity<Entry> insertEntry(@RequestBody @Valid Entry entry) {
-        Entry e = entryService.addEntry(entry);
+    public ResponseEntity<EntryDTO> insertEntry(@RequestBody @Valid EntryDTO entry) {
+        EntryDTO e = entryService.addEntry(entry);
         return ResponseEntity.status(HttpStatus.OK).body(e);
     }
 
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<Entry> updateEntry(@RequestBody @Valid Entry entry, @PathVariable("id") int entryId) {
-        Entry e = entryService.updateEntry(entry, entryId);
+    public ResponseEntity<EntryDTO> updateEntry(@RequestBody @Valid EntryDTO entry, @PathVariable("id") int entryId) {
+        EntryDTO e = entryService.updateEntry(entry, entryId);
         return ResponseEntity.status(HttpStatus.OK).body(e);
     }
 
@@ -41,31 +41,35 @@ public class EntryController {
     }
 
     @GetMapping(path = "/getEntry")
-    public ResponseEntity<Entry> getEntryById(@RequestParam("id") int id) {
-        Entry e = entryService.getEntryById(id);
+    public ResponseEntity<EntryDTO> getEntryById(@RequestParam("id") int id) {
+        EntryDTO e = entryService.getEntryById(id);
         return ResponseEntity.status(HttpStatus.OK).body(e);
     }
 
     @GetMapping(path = "/getAllEntries")
-    public ResponseEntity<List<Entry>> getAllEntries() {
-        List<Entry> entries = entryService.getAllEntries();
+    public ResponseEntity<List<EntryDTO>> getAllEntries() {
+        List<EntryDTO> entries = entryService.getAllEntries();
         return ResponseEntity.status(HttpStatus.OK).body(entries);
     }
 
     @GetMapping(path = "/getEntriesInDay")
-    public ResponseEntity<List<Entry>> getAllEntriesInDate(
+    public ResponseEntity<List<EntryDTO>> getAllEntriesInDate(
             @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
-        List<Entry> entries = entryService.getAllEntriesInDay(date);
+        List<EntryDTO> entries = entryService.getAllEntriesInDay(date);
         return ResponseEntity.status(HttpStatus.OK).body(entries);
     }
 
     @GetMapping(path = "/getEntriesBetween")
-    public ResponseEntity<List<Entry>> getAllEntriesBetween(
+    public ResponseEntity<List<EntryDTO>> getAllEntriesBetween(
             @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        List<Entry> entries = entryService.getAllEntriesBetween(startDate, endDate);
+        List<EntryDTO> entries = entryService.getAllEntriesBetween(startDate, endDate);
         return ResponseEntity.status(HttpStatus.OK).body(entries);
     }
 
-
+    @GetMapping(path = "/getEntriesFromMood")
+    public ResponseEntity<List<EntryDTO>> getEntriesFromMood(@RequestParam("mood") String mood) {
+        List<EntryDTO> entries = entryService.getAllEntriesOfMood(mood);
+        return ResponseEntity.status(HttpStatus.OK).body(entries);
+    }
 }

@@ -2,26 +2,26 @@ package com.example.DailyReflectBackend.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name = "moods")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Mood {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @NotEmpty
-    private String mood;
+    @NotNull
+    private String username;
 
-    @OneToMany(mappedBy = "mood", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Entry> entries = new ArrayList<>();
+    @NotEmpty
+    @NotNull
+    private String password;
 }
