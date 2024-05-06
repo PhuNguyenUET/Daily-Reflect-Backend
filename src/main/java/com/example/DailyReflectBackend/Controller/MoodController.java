@@ -49,10 +49,4 @@ public class MoodController {
         List<MoodDTO> moodList = moodService.getAllMood();
         return ResponseEntity.status(HttpStatus.OK).body(moodList);
     }
-
-    @GetMapping(path = "/getMood")
-    public ResponseEntity<MoodDTO> getMoodByMoodString(@RequestParam("mood") String mood) {
-        MoodDTO m = moodService.getMoodByMoodString(mood);
-        return ResponseEntity.status(HttpStatus.OK).body(m);
-    }
 }

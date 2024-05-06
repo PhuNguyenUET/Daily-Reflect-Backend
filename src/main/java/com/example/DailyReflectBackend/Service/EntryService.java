@@ -6,8 +6,10 @@ import com.example.DailyReflectBackend.Exceptions.NoSuchEntryException;
 import com.example.DailyReflectBackend.Exceptions.NoSuchMoodException;
 import com.example.DailyReflectBackend.Model.Entry;
 import com.example.DailyReflectBackend.Model.Mood;
+import com.example.DailyReflectBackend.Model.User;
 import com.example.DailyReflectBackend.Repository.EntryRepository;
 import com.example.DailyReflectBackend.Repository.MoodRepository;
+import com.example.DailyReflectBackend.Repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class EntryService {
     private EntryRepository entryRepository;
     private MoodRepository moodRepository;
+    private UserRepository userRepository;
 
     private ModelMapper modelMapper;
 
@@ -32,6 +35,11 @@ public class EntryService {
     @Autowired
     public void setMoodRepository(MoodRepository moodRepository) {
         this.moodRepository = moodRepository;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -52,13 +60,23 @@ public class EntryService {
         return entries.stream().map(e -> this.modelMapper.map(e, EntryDTO.class)).toList();
     }
 
-    public List<EntryDTO> getAllEntriesInDay(Date day) {
-        List<Entry> entries = entryRepository.findAllBySavedDay(day);
+    public List<EntryDTO> getAllEntriesInDay(Date day, int userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()) {
+            //TODO: Implement exceptions
+        }
+        User user = userOptional.get();
+        List<Entry> entries = entryRepository.findAllBySavedDayAndUser(day, user);
         return entries.stream().map(e -> this.modelMapper.map(e, EntryDTO.class)).toList();
     }
 
-    public List<EntryDTO> getAllEntriesBetween(Date startDate, Date endDate) {
-        List<Entry> entries = entryRepository.findAllBySavedDayBetween(startDate, endDate);
+    public List<EntryDTO> getAllEntriesBetween(Date startDate, Date endDate, int userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()) {
+            //TODO: Implement exceptions
+        }
+        User user = userOptional.get();
+        List<Entry> entries = entryRepository.findAllByUserAndSavedDayBetween(user, startDate, endDate);
         return entries.stream().map(e -> this.modelMapper.map(e, EntryDTO.class)).toList();
     }
 

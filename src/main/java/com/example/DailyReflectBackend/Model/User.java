@@ -24,4 +24,12 @@ public class User {
     @NotEmpty
     @NotNull
     private String password;
+
+    @NotEmpty
+    @NotNull
+    private String name;
+
+    private int backgroundId;
+
+    private int welcomeSongId;
 }

@@ -2,10 +2,13 @@ package com.example.DailyReflectBackend.Configuration;
 
 import com.example.DailyReflectBackend.DTO.EntryDTO;
 import com.example.DailyReflectBackend.DTO.MoodDTO;
+import com.example.DailyReflectBackend.DTO.UserDTO;
 import com.example.DailyReflectBackend.Model.Entry;
 import com.example.DailyReflectBackend.Model.Mood;
+import com.example.DailyReflectBackend.Model.User;
 import com.example.DailyReflectBackend.Service.EntryService;
 import com.example.DailyReflectBackend.Service.MoodService;
+import com.example.DailyReflectBackend.Service.UserService;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -14,8 +17,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ModelMapperConfig {
-    private EntryService _entryService = new EntryService();
-    private MoodService _moodService = new MoodService();
+    private final EntryService _entryService = new EntryService();
+    private final MoodService _moodService = new MoodService();
+    private final UserService _userService = new UserService();
 
     @Bean
     public ModelMapper modelMapperBean() {
@@ -30,6 +34,7 @@ public class ModelMapperConfig {
                 entryDTO.setSavedDay(entry.getSavedDay());
                 entryDTO.setSavedTime(entry.getSavedTime());
                 entryDTO.setMoodId(entry.getMood().getId());
+                entryDTO.setUserId(entry.getUser().getId());
 
                 return entryDTO;
             }
@@ -47,6 +52,21 @@ public class ModelMapperConfig {
             }
         };
 
+        Converter<User, UserDTO> userDTOConverter = new Converter<User, UserDTO>() {
+            @Override
+            public UserDTO convert(MappingContext<User, UserDTO> context) {
+                User user = context.getSource();
+                UserDTO userDTO = context.getDestination();
+
+                userDTO.setId(user.getId());
+                userDTO.setName(user.getName());
+                userDTO.setBackgroundId(user.getBackgroundId());
+                userDTO.setWelcomeSongId(user.getWelcomeSongId());
+
+                return userDTO;
+            }
+        };
+
         Converter<EntryDTO, Entry> entryConverter = new Converter<EntryDTO, Entry>() {
             @Override
             public Entry convert(MappingContext<EntryDTO, Entry> context) {
@@ -57,6 +77,7 @@ public class ModelMapperConfig {
                 entry.setSavedDay(entryDTO.getSavedDay());
                 entry.setSavedTime(entryDTO.getSavedTime());
                 entry.setMood(_moodService.getMoodObjectById(entryDTO.getMoodId()));
+                entry.setUser(_userService.getUserById(entryDTO.getUserId()));
                 return entry;
             }
         };

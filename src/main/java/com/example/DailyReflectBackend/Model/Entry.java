@@ -38,4 +38,9 @@ public class Entry {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "moodId", referencedColumnName = "id")
     private Mood mood;
+
+    @NotNull
+    @ManyToOne(fetch =  FetchType.EAGER)
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private User user;
 }

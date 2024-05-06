@@ -26,4 +26,5 @@ public class EntryDTO {
 
     private int moodId;
 
+    private int userId;
 }

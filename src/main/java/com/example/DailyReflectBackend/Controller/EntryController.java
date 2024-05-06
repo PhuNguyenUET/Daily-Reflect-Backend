@@ -54,16 +54,19 @@ public class EntryController {
 
     @GetMapping(path = "/getEntriesInDay")
     public ResponseEntity<List<EntryDTO>> getAllEntriesInDate(
-            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
-        List<EntryDTO> entries = entryService.getAllEntriesInDay(date);
+            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            @RequestParam("userId") int userId) {
+        List<EntryDTO> entries = entryService.getAllEntriesInDay(date, userId);
         return ResponseEntity.status(HttpStatus.OK).body(entries);
     }
 
     @GetMapping(path = "/getEntriesBetween")
     public ResponseEntity<List<EntryDTO>> getAllEntriesBetween(
             @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        List<EntryDTO> entries = entryService.getAllEntriesBetween(startDate, endDate);
+            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+            @RequestParam("userId") int userId
+    ) {
+        List<EntryDTO> entries = entryService.getAllEntriesBetween(startDate, endDate, userId);
         return ResponseEntity.status(HttpStatus.OK).body(entries);
     }
 
