@@ -1,5 +1,6 @@
 package com.example.DailyReflectBackend.Service;
 
+import com.example.DailyReflectBackend.Exceptions.NoSuchUserException;
 import com.example.DailyReflectBackend.Model.User;
 import com.example.DailyReflectBackend.Repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if(userOptional.isEmpty()) {
-            // TODO: Implement exceptions
+            throw new NoSuchUserException("Cannot find user with id " + userId);
         }
 
         return userOptional.get();
