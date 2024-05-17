@@ -4,6 +4,7 @@ import com.example.DailyReflectBackend.DTO.EntryDTO;
 import com.example.DailyReflectBackend.Exceptions.EntryAlreadyExistsException;
 import com.example.DailyReflectBackend.Exceptions.NoSuchEntryException;
 import com.example.DailyReflectBackend.Exceptions.NoSuchMoodException;
+import com.example.DailyReflectBackend.Exceptions.NoSuchUserException;
 import com.example.DailyReflectBackend.Model.Entry;
 import com.example.DailyReflectBackend.Model.Mood;
 import com.example.DailyReflectBackend.Model.User;
@@ -63,7 +64,7 @@ public class EntryService {
     public List<EntryDTO> getAllEntriesInDay(Date day, int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty()) {
-            //TODO: Implement exceptions
+            throw new NoSuchUserException("Cannot find user with id " + userId);
         }
         User user = userOptional.get();
         List<Entry> entries = entryRepository.findAllBySavedDayAndUser(day, user);
@@ -73,7 +74,7 @@ public class EntryService {
     public List<EntryDTO> getAllEntriesBetween(Date startDate, Date endDate, int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty()) {
-            //TODO: Implement exceptions
+            throw new NoSuchUserException("Cannot find user with id " + userId);
         }
         User user = userOptional.get();
         List<Entry> entries = entryRepository.findAllByUserAndSavedDayBetween(user, startDate, endDate);
