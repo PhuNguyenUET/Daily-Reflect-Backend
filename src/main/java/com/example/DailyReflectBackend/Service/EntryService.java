@@ -1,7 +1,6 @@
 package com.example.DailyReflectBackend.Service;
 
 import com.example.DailyReflectBackend.DTO.EntryDTO;
-import com.example.DailyReflectBackend.Exceptions.EntryAlreadyExistsException;
 import com.example.DailyReflectBackend.Exceptions.NoSuchEntryException;
 import com.example.DailyReflectBackend.Exceptions.NoSuchMoodException;
 import com.example.DailyReflectBackend.Exceptions.NoSuchUserException;
@@ -15,7 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -61,23 +60,23 @@ public class EntryService {
         return entries.stream().map(e -> this.modelMapper.map(e, EntryDTO.class)).toList();
     }
 
-    public List<EntryDTO> getAllEntriesInDay(Date day, int userId) {
+    public List<EntryDTO> getAllEntriesInDay(LocalDate date, int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty()) {
             throw new NoSuchUserException("Cannot find user with id " + userId);
         }
         User user = userOptional.get();
-        List<Entry> entries = entryRepository.findAllBySavedDayAndUser(day, user);
+        List<Entry> entries = entryRepository.findAllByUserAndDate(user, date);
         return entries.stream().map(e -> this.modelMapper.map(e, EntryDTO.class)).toList();
     }
 
-    public List<EntryDTO> getAllEntriesBetween(Date startDate, Date endDate, int userId) {
+    public List<EntryDTO> getAllEntriesBetween(LocalDate startDate, LocalDate endDate, int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty()) {
             throw new NoSuchUserException("Cannot find user with id " + userId);
         }
         User user = userOptional.get();
-        List<Entry> entries = entryRepository.findAllByUserAndSavedDayBetween(user, startDate, endDate);
+        List<Entry> entries = entryRepository.findAllByUserAndDateBetween(user, startDate, endDate);
         return entries.stream().map(e -> this.modelMapper.map(e, EntryDTO.class)).toList();
     }
 

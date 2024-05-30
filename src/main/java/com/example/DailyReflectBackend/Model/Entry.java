@@ -6,13 +6,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 @Entity
@@ -28,11 +24,7 @@ public class Entry {
     @NotEmpty
     private String content;
 
-    @Temporal(TemporalType.DATE)
-    private Date savedDay;
-
-    @Temporal(TemporalType.TIME)
-    private Date savedTime;
+    private LocalDateTime date;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
