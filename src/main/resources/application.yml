@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-cp3kl6vsc6pc73fqs61g-a.singapore-postgres.render.com/daily_reflect_db_test
+    username: daily_reflect_db_test_user
+    password: nAbVScMMIQULPsv7mUenZWpRY0Mz7Xf4
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+application:
+  security:
+    jwt:
+      secret-key: LZVZnG9hu8l9HBG3vAZV6zuXE51SbyZqvt7DAnWKe3k=

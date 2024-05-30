@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class EntryController {
 
     @GetMapping(path = "/getEntriesInDay")
     public ResponseEntity<List<EntryDTO>> getAllEntriesInDate(
-            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam("userId") int userId) {
         List<EntryDTO> entries = entryService.getAllEntriesInDay(date, userId);
         return ResponseEntity.status(HttpStatus.OK).body(entries);
@@ -62,8 +63,8 @@ public class EntryController {
 
     @GetMapping(path = "/getEntriesBetween")
     public ResponseEntity<List<EntryDTO>> getAllEntriesBetween(
-            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             @RequestParam("userId") int userId
     ) {
         List<EntryDTO> entries = entryService.getAllEntriesBetween(startDate, endDate, userId);
